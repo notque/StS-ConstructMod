@@ -1,11 +1,12 @@
 {
   "modid": "constructmod",
   "name": "The Construct",
-  "author_list": ["Moocowsgomoo, Spike Berd, Wilde, Rita-B"],
-  "description": "New character - The Construct! \n\nRECENT CHANGES:\nv1.0.6\n- ZHS localization update for Rocket Booster (Rita-B)\n\nv1.0.5\n- Localization for KOR (Wilde) and ZHS (Rita-B).\n- Fixed crash with Long-Range Lance.\n- Fixed rare crash with Overheat effects.\n- Probably some other minor bugfixes. \n\nv1.0.4\n- Shift Guard/Strike no longer Cycle in Challenge Mode.\n\nv1.0.3\n- Added Challenge Mode (1) to char select.\n- Fix Save State not triggering Bunker.\n- Power Up now deals more damage and Exhausts.\n- Wedding Ring description now saves.\n- Changed Challenge 3 (config options).\n\n\nThanks for playing the Construct! Please let Moocowsgomoo know on Steam, Discord, or GitHub if you have any feedback or bug reports!",
-  "version": "1.0.6",
-  "sts_version": "01-23-2019",
-  "mts_version": "3.4.0",
+  "author_list": ["Moocowsgomoo", "Spike Berd", "Wilde", "Rita-B"],
+  "description": "New character - The Construct! \n\nRECENT CHANGES:\nv1.1.0\n- Updated for BaseMod 5.x compatibility\n- Updated ModTheSpire compatibility\n- Added StSLib as optional dependency\n\nv1.0.6\n- ZHS localization update for Rocket Booster (Rita-B)\n\nv1.0.5\n- Localization for KOR (Wilde) and ZHS (Rita-B).\n- Fixed crash with Long-Range Lance.\n- Fixed rare crash with Overheat effects.\n\nv1.0.4\n- Shift Guard/Strike no longer Cycle in Challenge Mode.\n\nv1.0.3\n- Added Challenge Mode (1) to char select.\n- Fix Save State not triggering Bunker.\n- Power Up now deals more damage and Exhausts.\n\nThanks for playing the Construct! Please let Moocowsgomoo know on Steam, Discord, or GitHub if you have any feedback or bug reports!",
+  "version": "1.1.0",
+  "sts_version": "12-01-2024",
+  "mts_version": "3.30.0",
   "dependencies": ["basemod"],
+  "optional_dependencies": ["stslib"],
   "update_json": "https://api.github.com/repos/Moocowsgomoo/StS-ConstructMod/releases/latest"
 }
