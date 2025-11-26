@@ -1,0 +1,96 @@
+name: Build Mod
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:  # Allow manual triggers
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 8
+      uses: actions/setup-java@v4
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+
+    - name: Create lib directory
+      run: mkdir -p ../lib
+
+    - name: Download ModTheSpire
+      run: |
+        curl -L -o ../lib/ModTheSpire.jar \
+          "https://github.com/kiooeht/ModTheSpire/releases/latest/download/ModTheSpire.jar"
+
+    - name: Download BaseMod
+      run: |
+        # Get latest release info and download BaseMod.jar
+        LATEST_URL=$(curl -s https://api.github.com/repos/daviscook477/BaseMod/releases/latest \
+          | grep "browser_download_url.*BaseMod.jar" \
+          | cut -d '"' -f 4)
+        curl -L -o ../lib/BaseMod.jar "$LATEST_URL"
+
+    - name: Download StSLib
+      run: |
+        LATEST_URL=$(curl -s https://api.github.com/repos/kiooeht/StSLib/releases/latest \
+          | grep "browser_download_url.*StSLib.jar" \
+          | cut -d '"' -f 4)
+        curl -L -o ../lib/StSLib.jar "$LATEST_URL"
+
+    - name: Download Slay the Spire desktop JAR
+      run: |
+        # Download from kiooeht's ModTheSpire wiki resources (commonly used stub)
+        # This is a minimal stub JAR for compilation only
+        curl -L -o ../lib/desktop-1.0.jar \
+          "https://github.com/kiooeht/ModTheSpire/raw/master/lib/desktop-1.0.jar" || \
+        # Fallback: create an empty placeholder if download fails
+        # The build may fail but we'll see the actual error
+        touch ../lib/desktop-1.0.jar
+
+    - name: Create placeholder for optional dependencies
+      run: |
+        # ReplayTheSpire is optional, create empty JAR if needed
+        if [ ! -f ../lib/ReplayTheSpireMod.jar ]; then
+          echo "Creating placeholder for ReplayTheSpireMod.jar"
+          jar cf ../lib/ReplayTheSpireMod.jar -C /dev/null . 2>/dev/null || touch ../lib/ReplayTheSpireMod.jar
+        fi
+
+    - name: List lib directory
+      run: ls -la ../lib/
+
+    - name: Build with Maven
+      run: mvn package -DskipTests --batch-mode
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ConstructModV2
+        path: target/ConstructModV2.jar
+        if-no-files-found: error
+
+  # Create a release when pushing a tag
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ConstructModV2
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ConstructModV2.jar
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -300,7 +300,9 @@ public class ConstructMod implements PostInitializeSubscriber, EditCardsSubscrib
 		@SuppressWarnings("unchecked")
 		Map<String,Keyword> keywords = (Map<String,Keyword>)gson.fromJson(strings, typeToken);
 		for (Keyword kw : keywords.values()) {
-			BaseMod.addKeyword(kw.NAMES, kw.DESCRIPTION);
+			// BaseMod 5.0+ uses prefix for proper keyword tooltip matching
+			// The prefix "construct" allows matching "construct:keyword" in card descriptions
+			BaseMod.addKeyword("construct", kw.PROPER_NAME, kw.NAMES, kw.DESCRIPTION);
 		}
 		logger.info("done editing keywords");
     }
@@ -313,7 +315,9 @@ public class ConstructMod implements PostInitializeSubscriber, EditCardsSubscrib
 		logger.info("begin editing characters");
 		
 		logger.info("add " + TheConstructEnum.THE_CONSTRUCT_MOD.toString());
+		// BaseMod 5.0+ requires card color parameter
 		BaseMod.addCharacter(new TheConstruct(TheConstruct.charStrings.NAMES[1], TheConstructEnum.THE_CONSTRUCT_MOD),
+				AbstractCardEnum.CONSTRUCTMOD,
 				"img/charSelect/constructButton.png", "img/charSelect/constructPortrait.jpg",
 				TheConstructEnum.THE_CONSTRUCT_MOD);
 		

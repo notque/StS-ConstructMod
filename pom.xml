@@ -9,27 +9,39 @@
 	<description>New Character: The Construct!</description>
 
 	<dependencies>
+		<!-- Slay the Spire base game -->
 		<dependency>
 			<groupId>com.megacrit.cardcrawl</groupId>
 			<artifactId>slaythespire</artifactId>
-			<version>016</version>
+			<version>2.0</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/../lib/desktop-1.0.jar</systemPath>
 		</dependency>
+		<!-- BaseMod - modding API (5.x+) -->
 		<dependency>
 			<groupId>basemod</groupId>
 			<artifactId>basemod</artifactId>
-			<version>1.6.5</version>
+			<version>5.5.0</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/../lib/BaseMod.jar</systemPath>
 		</dependency>
+		<!-- ModTheSpire - mod loader (3.x+) -->
 		<dependency>
             <groupId>com.evacipated.cardcrawl</groupId>
             <artifactId>ModTheSpire</artifactId>
-            <version>2.2.1</version>
+            <version>3.30.0</version>
 			<scope>system</scope>
             <systemPath>${basedir}/../lib/ModTheSpire.jar</systemPath>
         </dependency>
+		<!-- StSLib - common modding utilities (optional but recommended) -->
+		<dependency>
+			<groupId>com.evacipated.cardcrawl</groupId>
+			<artifactId>StSLib</artifactId>
+			<version>1.10.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/../lib/StSLib.jar</systemPath>
+		</dependency>
+		<!-- ReplayTheSpire - optional crossover support -->
 		<dependency>
 			<groupId>replay</groupId>
 			<artifactId>ReplayTheSpire</artifactId>
@@ -40,7 +52,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>ConstructMod</finalName>
+		<finalName>ConstructModV2</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -52,6 +64,9 @@
 				</configuration>
 			</plugin>
 
+			<!-- Optional: Copy JAR to mods folder after build -->
+			<!-- To enable, set STS_MODS_DIR environment variable or uncomment and edit the path below -->
+			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -61,7 +76,7 @@
 						<phase>package</phase>
 						<configuration>
 							<target>
-								<copy file="target/ConstructMod.jar" tofile="C:\Program Files (x86)\Steam\SteamApps\common\SlayTheSpire\mods\ConstructMod.jar" />
+								<copy file="target/ConstructMod.jar" tofile="${env.STS_MODS_DIR}/ConstructMod.jar" />
 							</target>
 						</configuration>
 						<goals>
@@ -70,6 +85,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 </project>
