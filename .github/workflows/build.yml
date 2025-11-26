@@ -26,44 +26,93 @@ jobs:
 
     - name: Download ModTheSpire
       run: |
-        curl -L -o ../lib/ModTheSpire.jar \
-          "https://github.com/kiooeht/ModTheSpire/releases/latest/download/ModTheSpire.jar"
+        # ModTheSpire releases contain a JAR directly
+        echo "Downloading ModTheSpire..."
+        curl -L -f -o ../lib/ModTheSpire.jar \
+          "https://github.com/kiooeht/ModTheSpire/releases/download/v3.30.3/ModTheSpire.jar" || {
+          echo "Direct download failed, trying latest release..."
+          # Get the latest release download URL
+          RELEASE_URL=$(curl -s https://api.github.com/repos/kiooeht/ModTheSpire/releases/latest | jq -r '.assets[] | select(.name=="ModTheSpire.jar") | .browser_download_url')
+          if [ -n "$RELEASE_URL" ] && [ "$RELEASE_URL" != "null" ]; then
+            curl -L -f -o ../lib/ModTheSpire.jar "$RELEASE_URL"
+          else
+            echo "ERROR: Could not find ModTheSpire.jar in release"
+            exit 1
+          fi
+        }
+        ls -la ../lib/ModTheSpire.jar
 
     - name: Download BaseMod
       run: |
-        # Get latest release info and download BaseMod.jar
-        LATEST_URL=$(curl -s https://api.github.com/repos/daviscook477/BaseMod/releases/latest \
-          | grep "browser_download_url.*BaseMod.jar" \
-          | cut -d '"' -f 4)
-        curl -L -o ../lib/BaseMod.jar "$LATEST_URL"
+        echo "Downloading BaseMod..."
+        # Try direct download first
+        curl -L -f -o ../lib/BaseMod.jar \
+          "https://github.com/daviscook477/BaseMod/releases/download/v5.54.1/BaseMod.jar" || {
+          echo "Direct download failed, trying latest release..."
+          RELEASE_URL=$(curl -s https://api.github.com/repos/daviscook477/BaseMod/releases/latest | jq -r '.assets[] | select(.name=="BaseMod.jar") | .browser_download_url')
+          if [ -n "$RELEASE_URL" ] && [ "$RELEASE_URL" != "null" ]; then
+            curl -L -f -o ../lib/BaseMod.jar "$RELEASE_URL"
+          else
+            echo "ERROR: Could not find BaseMod.jar in release"
+            exit 1
+          fi
+        }
+        ls -la ../lib/BaseMod.jar
 
     - name: Download StSLib
       run: |
-        LATEST_URL=$(curl -s https://api.github.com/repos/kiooeht/StSLib/releases/latest \
-          | grep "browser_download_url.*StSLib.jar" \
-          | cut -d '"' -f 4)
-        curl -L -o ../lib/StSLib.jar "$LATEST_URL"
+        echo "Downloading StSLib..."
+        curl -L -f -o ../lib/StSLib.jar \
+          "https://github.com/kiooeht/StSLib/releases/download/v2.1.1/StSLib.jar" || {
+          echo "Direct download failed, trying latest release..."
+          RELEASE_URL=$(curl -s https://api.github.com/repos/kiooeht/StSLib/releases/latest | jq -r '.assets[] | select(.name=="StSLib.jar") | .browser_download_url')
+          if [ -n "$RELEASE_URL" ] && [ "$RELEASE_URL" != "null" ]; then
+            curl -L -f -o ../lib/StSLib.jar "$RELEASE_URL"
+          else
+            echo "ERROR: Could not find StSLib.jar in release"
+            exit 1
+          fi
+        }
+        ls -la ../lib/StSLib.jar
 
-    - name: Download Slay the Spire desktop JAR
+    - name: Download Slay the Spire desktop JAR (stub)
       run: |
-        # Download from kiooeht's ModTheSpire wiki resources (commonly used stub)
-        # This is a minimal stub JAR for compilation only
-        curl -L -o ../lib/desktop-1.0.jar \
-          "https://github.com/kiooeht/ModTheSpire/raw/master/lib/desktop-1.0.jar" || \
-        # Fallback: create an empty placeholder if download fails
-        # The build may fail but we'll see the actual error
-        touch ../lib/desktop-1.0.jar
+        echo "Downloading STS desktop stub..."
+        # Use the community-maintained mod compile dependencies
+        # This contains only the class signatures needed for compilation
+        curl -L -f -o ../lib/desktop-1.0.jar \
+          "https://raw.githubusercontent.com/Gremious/StS-DefaultModBase/master/lib/desktop-1.0.jar" || \
+        curl -L -f -o ../lib/desktop-1.0.jar \
+          "https://github.com/Alchyr/BasicMod/raw/master/lib/desktop-1.0.jar" || {
+          echo "WARNING: Could not download desktop-1.0.jar stub"
+          echo "Build will likely fail - game JAR needed for compilation"
+          # Create minimal empty jar as last resort
+          echo "Manifest-Version: 1.0" > manifest.txt
+          jar cfm ../lib/desktop-1.0.jar manifest.txt
+          rm manifest.txt
+        }
+        ls -la ../lib/desktop-1.0.jar
 
     - name: Create placeholder for optional dependencies
       run: |
-        # ReplayTheSpire is optional, create empty JAR if needed
-        if [ ! -f ../lib/ReplayTheSpireMod.jar ]; then
-          echo "Creating placeholder for ReplayTheSpireMod.jar"
-          jar cf ../lib/ReplayTheSpireMod.jar -C /dev/null . 2>/dev/null || touch ../lib/ReplayTheSpireMod.jar
-        fi
+        # ReplayTheSpire is optional, create empty JAR
+        echo "Manifest-Version: 1.0" > manifest.txt
+        jar cfm ../lib/ReplayTheSpireMod.jar manifest.txt
+        rm manifest.txt
+        ls -la ../lib/
 
-    - name: List lib directory
-      run: ls -la ../lib/
+    - name: Verify downloaded JARs
+      run: |
+        echo "Verifying JAR files..."
+        for jar in ../lib/*.jar; do
+          echo "Checking $jar..."
+          if unzip -t "$jar" > /dev/null 2>&1; then
+            echo "  ✓ Valid JAR"
+          else
+            echo "  ✗ Invalid or empty JAR"
+            ls -la "$jar"
+          fi
+        done
 
     - name: Build with Maven
       run: mvn package -DskipTests --batch-mode
