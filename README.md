@@ -1,5 +1,7 @@
-# The Construct
+# The Construct V2
 Adds a new character for Slay The Spire, complete with 75 new cards and 8 new relics.
+
+**V2 Note:** This is an updated version of The Construct mod with BaseMod 5.x compatibility. It can be installed alongside the original Construct mod for testing purposes.
 * On reaching the first unlock level, you'll unlock an alternate starting relic in the "Mods" tab of the game's main menu.
 * Right now all cards and relics are unlocked at the start, so subsequent unlocks don't do anything.
 
@@ -31,12 +33,12 @@ A huge thanks to anyone who's been inspired to create art based on the Construct
 If you have any fanart you'd like to contribute, please let me know through Discord (Moocowsgomoo) or Reddit (u/StS-Moocowsgomoo).
 
 ## Requirements ##
-Copied from https://github.com/gskleres/FruityMod-StS
 
 #### General Use ####
-* Java 8 (JRE). Currently only Java 8 should be used, issues with Java 9 are being looked into.
-* BaseMod v.2.10.0+ (https://github.com/daviscook477/BaseMod/releases)
-* ModTheSpire v2.6.0+ (https://github.com/kiooeht/ModTheSpire/releases)
+* Java 8 (JRE). Currently only Java 8 should be used.
+* BaseMod v5.0.0+ (https://github.com/daviscook477/BaseMod/releases or Steam Workshop)
+* ModTheSpire v3.0.0+ (https://github.com/kiooeht/ModTheSpire/releases or Steam Workshop)
+* StSLib (optional, https://github.com/kiooeht/StSLib/releases or Steam Workshop)
 
 ## Installation ##
 1. If you have `ModTheSpire` already installed you can skip to step 5. Otherwise continue with step 2:
@@ -45,10 +47,10 @@ Copied from https://github.com/gskleres/FruityMod-StS
 4. Create a `mods` folder in your **Slay The Spire** directory so it looks like `C:\Program Files (x86)\Steam\steamapps\common\SlayTheSpire\mods`
 5. Download `BaseMod.jar` from the latest release (https://github.com/daviscook477/BaseMod/releases)
 6. Move `BaseMod.jar` into the `mods` folder you created in step 4
-7. Download `ConstructMod.jar` from the latest release (https://github.com/Moocowsgomoo/StS-ConstructMod/releases)
-8. Move `ConstructMod.jar` into the `mods` folder you created in step 4
+7. Download `ConstructModV2.jar` from the latest release (https://github.com/Moocowsgomoo/StS-ConstructMod/releases)
+8. Move `ConstructModV2.jar` into the `mods` folder you created in step 4
 9. Your modded version of **Slay The Spire** can now be launched by double-clicking on `ModTheSpire.jar`
-10. This will open a mod select menu where you need to make sure that both `BaseMod` and `ConstructMod` are checked before clicking **play**
+10. This will open a mod select menu where you need to make sure that both `BaseMod` and `The Construct V2` are checked before clicking **play**
 
 Here is a great video showing how to install mods, by Xterminator: https://www.youtube.com/watch?v=r2m2aL1eEjw
 
