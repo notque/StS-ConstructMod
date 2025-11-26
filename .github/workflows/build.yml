@@ -26,53 +26,28 @@ jobs:
 
     - name: Download ModTheSpire
       run: |
-        # ModTheSpire releases contain a JAR directly
+        # ModTheSpire releases as a ZIP file containing the JAR
         echo "Downloading ModTheSpire..."
-        curl -L -f -o ../lib/ModTheSpire.jar \
-          "https://github.com/kiooeht/ModTheSpire/releases/download/v3.30.3/ModTheSpire.jar" || {
-          echo "Direct download failed, trying latest release..."
-          # Get the latest release download URL
-          RELEASE_URL=$(curl -s https://api.github.com/repos/kiooeht/ModTheSpire/releases/latest | jq -r '.assets[] | select(.name=="ModTheSpire.jar") | .browser_download_url')
-          if [ -n "$RELEASE_URL" ] && [ "$RELEASE_URL" != "null" ]; then
-            curl -L -f -o ../lib/ModTheSpire.jar "$RELEASE_URL"
-          else
-            echo "ERROR: Could not find ModTheSpire.jar in release"
-            exit 1
-          fi
-        }
+        curl -L -f -o /tmp/ModTheSpire.zip \
+          "https://github.com/kiooeht/ModTheSpire/releases/download/v3.6.3/ModTheSpire.zip"
+        echo "Extracting ModTheSpire.jar from ZIP..."
+        unzip -j /tmp/ModTheSpire.zip "ModTheSpire.jar" -d ../lib/ || \
+        unzip -j /tmp/ModTheSpire.zip "*/ModTheSpire.jar" -d ../lib/ || \
+        unzip -l /tmp/ModTheSpire.zip  # Show contents if extraction fails
         ls -la ../lib/ModTheSpire.jar
 
     - name: Download BaseMod
       run: |
         echo "Downloading BaseMod..."
-        # Try direct download first
         curl -L -f -o ../lib/BaseMod.jar \
-          "https://github.com/daviscook477/BaseMod/releases/download/v5.54.1/BaseMod.jar" || {
-          echo "Direct download failed, trying latest release..."
-          RELEASE_URL=$(curl -s https://api.github.com/repos/daviscook477/BaseMod/releases/latest | jq -r '.assets[] | select(.name=="BaseMod.jar") | .browser_download_url')
-          if [ -n "$RELEASE_URL" ] && [ "$RELEASE_URL" != "null" ]; then
-            curl -L -f -o ../lib/BaseMod.jar "$RELEASE_URL"
-          else
-            echo "ERROR: Could not find BaseMod.jar in release"
-            exit 1
-          fi
-        }
+          "https://github.com/daviscook477/BaseMod/releases/download/v5.5.0/BaseMod.jar"
         ls -la ../lib/BaseMod.jar
 
     - name: Download StSLib
       run: |
         echo "Downloading StSLib..."
         curl -L -f -o ../lib/StSLib.jar \
-          "https://github.com/kiooeht/StSLib/releases/download/v2.1.1/StSLib.jar" || {
-          echo "Direct download failed, trying latest release..."
-          RELEASE_URL=$(curl -s https://api.github.com/repos/kiooeht/StSLib/releases/latest | jq -r '.assets[] | select(.name=="StSLib.jar") | .browser_download_url')
-          if [ -n "$RELEASE_URL" ] && [ "$RELEASE_URL" != "null" ]; then
-            curl -L -f -o ../lib/StSLib.jar "$RELEASE_URL"
-          else
-            echo "ERROR: Could not find StSLib.jar in release"
-            exit 1
-          fi
-        }
+          "https://github.com/kiooeht/StSLib/releases/download/v1.10.0/StSLib.jar"
         ls -la ../lib/StSLib.jar
 
     - name: Download Slay the Spire desktop JAR (stub)
